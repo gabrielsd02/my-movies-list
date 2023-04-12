@@ -45,4 +45,5 @@ export const TextTitle = styled.Text.attrs({
 })`
     color: white;
     text-align: center;
+    font-weight: bold;    
 `;

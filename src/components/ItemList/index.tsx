@@ -9,13 +9,15 @@ import {
 
 interface ItemListProps {
     item: Movies['results'][0];
+    styleContainer?: object;
 }
 
 export default function ItemList({
-    item
+    item,
+    styleContainer
 }: ItemListProps) {
 
-    return <Container>
+    return <Container style={styleContainer || {}}>
         <ContainerImagePressable>
             <ImagePosterMovie 
                 source={{ uri: `http://image.tmdb.org/t/p/w200/${item.poster_path}` }}

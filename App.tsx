@@ -1,5 +1,7 @@
-import { StatusBar, StyleSheet } from 'react-native';
+import { StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
+import 'react-native-gesture-handler';
+
 import Routes from './src/routes';
 import store from './src/store';
 
@@ -13,12 +15,3 @@ export default function App() {
       </Provider>    
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

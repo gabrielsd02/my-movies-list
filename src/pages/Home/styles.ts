@@ -1,11 +1,10 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+export const Container = styled.SafeAreaView`
     flex: 1;
     align-items: center;
     margin: 0px;
     position: relative;
-    padding-bottom: 10px;
     justify-content: center;
 `;
 
@@ -13,6 +12,7 @@ export const ContainerCarousel = styled.View`
     height: 250px 
     background-color: rgba(0, 0 , 0, 0.3); 
     align-items: center; 
+    margin-top: 10px;
     justify-content: flex-start;
 `;
 

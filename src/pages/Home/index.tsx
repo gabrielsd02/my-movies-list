@@ -1,14 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
-import { Dimensions, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { Image } from 'expo-image';
-import Carousel from 'react-native-reanimated-carousel';
+import { useEffect, useState } from 'react';
+import { Dimensions, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import Carousel from 'react-native-reanimated-carousel';
 import AnimatedLoader from 'react-native-animated-loader';
-import useIsMounted from 'ismounted';
 
 import axios from '../../../api';
 import {
-    Container,
+    Container,    
     ContainerCarousel,
     TextCategoryMovie,
     ContainerListMovies,
@@ -18,19 +16,11 @@ import { Movies } from '../../interfaces/home';
 import CarouselCardItem from '../../components/CarouselCardItem';
 import ListMovies from '../../components/ListMovies';
 
-interface ItemList {
-    item: Movies['results'][0];
-    index: number;
-}
-
 function Home() {
 
-    const mounted = useRef(false);
-    const refCarousel = useRef<any>();
     const [loading, setLoading] = useState(true);
     const [pageMoviesPopular, setPageMoviesPopular] = useState(1);
     const [pageTopRatedMovies, setPageTopRatedMovies] = useState(1);
-    const [pageUpcomingMovies, setPageUpcomingMovies] = useState(1);
     const [moviesUpcoming, setMoviesUpcoming] = useState({} as Movies);
     const [topRatedMovies, setTopRatedMovies] = useState({} as Movies);
     const [popularMovies, setPopularMovies] = useState({} as Movies);
@@ -41,9 +31,9 @@ function Home() {
 
         try {
 
-            const { data } = await axios.get<Movies>("https://api.themoviedb.org/3/movie/upcoming", {
+            const { data } = await axios.get<Movies>("/movie/upcoming", {
                 params: {
-                    page: pageUpcomingMovies
+                    page: 1
                 }
             });
             
@@ -63,7 +53,7 @@ function Home() {
 
         try {
 
-            const { data } = await axios.get<Movies>("https://api.themoviedb.org/3/movie/popular", {
+            const { data } = await axios.get<Movies>("/movie/popular", {
                 params: {
                     page: pageMoviesPopular
                 }
@@ -97,7 +87,7 @@ function Home() {
 
         try {
 
-            const { data } = await axios.get<Movies>("https://api.themoviedb.org/3/movie/top_rated", {
+            const { data } = await axios.get<Movies>("/movie/top_rated", {
                 params: {
                     page: pageTopRatedMovies
                 }
@@ -107,7 +97,7 @@ function Home() {
                 setTopRatedMovies({
                     page: data.page,
                     results: [
-                        ...popularMovies.results,
+                        ...topRatedMovies.results,
                         ...data.results
                     ],
                     total_pages: data.total_pages,
@@ -129,13 +119,13 @@ function Home() {
         consultMoviesPopular();
     }, [pageMoviesPopular]);
 
-    useEffect(() => {     
-        consultMoviesUpcoming();   
-    }, [pageUpcomingMovies]);
-
     useEffect(() => {
         consultMoviesTopRated();
     }, [pageTopRatedMovies])
+
+    useEffect(() => {
+        consultMoviesUpcoming();
+    }, [])
 
     if(loading) {
         return <AnimatedLoader
@@ -161,13 +151,17 @@ function Home() {
                 contentContainerStyle={{ flexGrow: 1 }}
                 style={{ 
                     flex: 1, 
-                    width: '100%' 
+                    width: '100%'
                 }}
                 keyboardShouldPersistTaps="always"        
             >
+                <ContainerCategoryMovie>
+                    <TextCategoryMovie>
+                        Upcoming
+                    </TextCategoryMovie>
+                </ContainerCategoryMovie>
                 <ContainerCarousel>                    
                     <Carousel 
-                        ref={refCarousel}
                         mode={'parallax'}
                         width={Dimensions.get('window').width - 15}
                         height={250}
