@@ -1,10 +1,26 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity, RefreshControl } from 'react-native'
+import { 
+	View, 
+	TextInput, 
+	TouchableOpacity, 
+	RefreshControl, 
+	Modal,	
+	Pressable
+} from 'react-native'
 import { FlashList } from '@shopify/flash-list';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 import {
-  Container
+	PageText,
+	Container,
+	LabelInput,
+	TextListEmpty,
+	ContainerList,
+	InputContainer,
+	SubInputContainer,
+	PaginationBoxArrow,
+	ContainerPagination
 } from './styles';
 import { Movies } from '../../interfaces/home';
 import axios from '../../../api';
@@ -14,7 +30,8 @@ function Search() {
 
 	const [word, setWord] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
-	const [page, setPage] = useState(0);
+	const [showModal, setShowModal] = useState(false);
+	const [page, setPage] = useState(1);
 	const [isInputFocused, setIsInputFocused] = useState(false);
 	const [moviesResults, setMoviesResults] = useState({} as Movies);
 	
@@ -26,6 +43,7 @@ function Search() {
 			
             const { data } = await axios.get<Movies>("/search/movie", {
                 params: {
+					page,
 					query: word,
 					language: 'en-US'
                 }
@@ -41,44 +59,42 @@ function Search() {
 
 	}
 
-	const ListEmpty = () => (
-		<View style={{ marginTop: 20 }}>
-			<Text
-				style={{
-					fontSize: 26,
-					color: 'gray',
-					fontWeight: 'bold',
-					textAlign: 'center'
-				}}
-			>
-				{(word && word.length > 0) ? 'Not found records :(' : 'The list is empty'}
-			</Text>
-		</View>
-	)
-	
+	const ListEmpty = () => {
+		return (!loading) ? <View style={{ marginTop: 20 }}>
+			<TextListEmpty>
+				{(moviesResults && moviesResults.total_results === 0) ? 'Not found records :(' : 'The list is empty'}
+			</TextListEmpty>
+		</View> : <></>
+	}
+
+	useEffect(() => {
+		if(word) {
+			setMoviesResults({} as Movies);
+			consult();
+		};
+	}, [page])
+
 	return (
-		<Container>
-			<View style={{ width: '100%', flexGrow: 1, alignItems: 'center', justifyContent: 'flex-start', marginVertical: 30, paddingHorizontal: 20 }}>
-				<View style={{ position: 'relative', width: '100%', flexDirection: 'row' }}>					
-					<Text
+
+		<Container>			
+			<InputContainer>
+				<SubInputContainer>					
+					<LabelInput
 						style={{
-							position: 'absolute',
 							left: (isInputFocused || word) ? 0 : 5,
-							color: 'white',
 							bottom: (isInputFocused || word) ? 40 : 8,
 							fontSize:  (isInputFocused || word) ? 14 : 24,
-							opacity: 0.5
 						}}
 					>
 						Search by movie title
-					</Text>
-					
+					</LabelInput>					
 					<TextInput 
 						value={word || ''}
-						blurOnSubmit
+						blurOnSubmit				
 						onChangeText={(text) => {
 							if(text === '') {
 								setWord(null);
+								setPage(1);
 								return setMoviesResults({} as Movies);
 							}
 							setWord(text);
@@ -116,54 +132,150 @@ function Search() {
 							name={'search'}
 						/>
 					</TouchableOpacity>			
-				</View>
-			</View>	
-			<View 
-				style={{
-					height: '85%',
-					maxHeight: 530,
-					width: '95%',					
-					paddingBottom: 10,
-					borderRadius: 5,
-					padding: 10,
-					backgroundColor: (!moviesResults.results || moviesResults.results.length === 0 ) ? 'transparent' : 'rgba(0, 0 , 0, 0.3)',
-					// alignItems: (!moviesResults.results || moviesResults.results.length === 0 ) ? 'center' : 'flex-start',
-					// justifyContent: (!moviesResults.results || moviesResults.results.length === 0 ) ? 'center' : 'flex-start'
+				</SubInputContainer>
+			</InputContainer>	
+			{(moviesResults.results && moviesResults?.results?.length > 0) && (
+				<ContainerPagination>
+					<PaginationBoxArrow
+						style={{
+							opacity: page > 1 ? 1 : 0.5
+						}}
+						onPress={() => {
+							if(page > 1 ) setPage(page -1);
+						}}
+					>
+						<FontAwesome 
+							name='arrow-left'
+							size={24}			
+							color={'white'}				
+						/>
+					</PaginationBoxArrow>
+					<PageText>
+						{page} - {moviesResults.total_pages ?? 1}
+					</PageText> 
+					<PaginationBoxArrow
+						style={{
+							opacity: page === moviesResults.total_pages ? 0.5 : 1
+						}}
+						onPress={() => {
+							if(page < moviesResults.total_pages) setPage(page + 1);
+						}}
+					>
+						<FontAwesome 
+							name='arrow-right'
+							size={24}			
+							color={'white'}				
+						/>
+					</PaginationBoxArrow>
+				</ContainerPagination>
+			)}
+			<ContainerList 
+				style={{					
+					backgroundColor: (
+						!moviesResults.results || 
+						moviesResults.results.length === 0 
+					) ? 'transparent' : 'rgba(0, 0 , 0, 0.3)'
 				}}
 			>
 				<FlashList 
 					data={moviesResults.results}
 					estimatedItemSize={(moviesResults.results && moviesResults?.results?.length) ? moviesResults?.results?.length : undefined}
-					showsVerticalScrollIndicator
-					renderItem={({ item, index }) => <ItemList 
-						item={item}
-						styleContainer={{
-							width: 150,
-							height: 250,
-							margin: 0,
-							marginBottom: 20,
-							padding: 0,
-							alignItems: 'center',
-							justifyContent: 'center'
-						}}
-					/>}  
+					showsVerticalScrollIndicator					
 					refreshing={loading}
+					ListEmptyComponent={ListEmpty}
+					numColumns={2}     					
+					renderItem={({ item, index }) => (
+						<ItemList 
+							item={item}
+							styleContainer={{
+								width: 150,
+								height: 250,
+								margin: 0,
+								marginBottom: 20,
+								padding: 0,
+								alignItems: 'center',
+								justifyContent: 'center'
+							}}
+						/>
+					)}  					
 					refreshControl={
 						<RefreshControl 
 							refreshing={loading || false}
 							tintColor={'#182C6C'}
 							colors={['#182C6C']}
 							progressBackgroundColor={'white'}
-							onRefresh={() => {
-								setPage(page);
-							}}	
+							onRefresh={consult}	
 						/>
 					}
-					ListEmptyComponent={ListEmpty}
-					numColumns={2}     
 				/>	
-			</View>	
+			</ContainerList>
+			{/* <Modal
+				animationType='fade'
+				visible={showModal}
+				onRequestClose={() => setShowModal(false)}
+				transparent
+			>
+				<Pressable style={{
+					flexGrow: 1,
+					width: '100%',
+					backgroundColor: 'rgba(0, 0, 0, 0.6)',
+					alignItems: 'center',
+					justifyContent:'center'
+				}}
+				onPress={() => setShowModal(false)}
+				>
+					<View style={{
+						height: 400,
+						backgroundColor: '#0b1b49eb',
+						borderRadius: 5,
+						borderWidth: 1,
+						borderColor: '#FFF',						
+						width: 300,
+						padding: 15
+					}}>
+						<View
+							style={{
+								width: '100%',
+								flexDirection: 'row',
+								alignItems: 'center',
+								justifyContent: 'space-between',
+								borderBottomWidth: 1,
+								paddingBottom: 5,
+								borderColor: '#FFF'
+							}}
+						>
+							<Text 
+								style={{
+									color: 'white',
+									fontWeight: 'bold',
+									fontSize: 24
+								}}
+							>
+								Filters
+							</Text>
+							<TouchableOpacity
+								style={{
+									alignItems: 'center',
+									justifyContent: 'center'
+								}}
+								activeOpacity={0.4}
+								onPress={() => setShowModal(false)}
+							>
+								<AntDesign 
+									name={'closecircle'}
+									color={'gray'}
+									size={28}
+								/>
+							</TouchableOpacity>
+						</View>
+					</View>
+					<View>
+
+					</View>
+				</Pressable>
+			</Modal> */}
 		</Container>
+
 	)
 
 }

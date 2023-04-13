@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Dimensions, ScrollView, Text, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
 import AnimatedLoader from 'react-native-animated-loader';
 
@@ -17,6 +18,8 @@ import CarouselCardItem from '../../components/CarouselCardItem';
 import ListMovies from '../../components/ListMovies';
 
 function Home() {
+
+    const navigation = useNavigation();
 
     const [loading, setLoading] = useState(true);
     const [pageMoviesPopular, setPageMoviesPopular] = useState(1);
@@ -173,6 +176,7 @@ function Home() {
                         renderItem={({ item, index }) => <CarouselCardItem 
                             item={item}
                             index={index}
+                            navigation={navigation}
                             numberResults={moviesUpcoming.results.length}
                         />}
                     />

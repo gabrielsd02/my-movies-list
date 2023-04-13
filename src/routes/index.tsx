@@ -7,8 +7,7 @@ import {
     createDrawerNavigator,
     DrawerContentScrollView, 
     DrawerContentComponentProps,
-    DrawerNavigationOptions,
-    DrawerHeaderProps
+    DrawerNavigationOptions
 } from '@react-navigation/drawer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -50,6 +49,10 @@ function Routes() {
 
     function CustomDrawerContent(props: DrawerContentComponentProps) {
         
+        const { state } = props;
+        const newState = { ...state} 
+        newState.routes = newState.routes.filter(item => item.name !== 'MovieDetails');
+
         return (
             <View style={{ flex: 1 }}>
                 <ContainerTitleDrawer>
@@ -58,10 +61,11 @@ function Routes() {
                     </TitleDrawer>
                 </ContainerTitleDrawer>
                 <DrawerContentScrollView 
-                    {...props}
+                    {...props}                    
                 >
                     <DrawerItemList 
-                        {...props}                                 
+                        {...props}                    
+                        state={newState}                                 
                     />            
                 </DrawerContentScrollView>
                 <ContainerLogout>
@@ -118,6 +122,13 @@ function Routes() {
                             name={'search'}
                         />
                     }}
+                />
+                <Drawer.Screen 
+                    name={"MovieDetails"}
+                    component={Search}
+                    options={{
+                        header: (props) => <Header {...props} />                        
+                    }}                    
                 />
             </Drawer.Navigator>
         </NavigationContainer>

@@ -9,22 +9,27 @@ import {
     ContainerTitleMovie,
     ContainerItemPressable
 } from './styles';
+import { NavigationProp } from '@react-navigation/native';
 
 interface CarouselItem {
     item: Movies['results'][0];
     index: number;
+    navigation: NavigationProp<ReactNavigation.RootParamList>;
     numberResults: number;
 }
 
 export function CarouselCardItem({
     item,
     index,
+    navigation,
     numberResults
 }: CarouselItem) {
 
     return <ContainerItemPressable 
         key={index}
-        onPress={() => console.log(index)}
+        onPress={() => navigation.navigate('MovieDetails', {
+            id: item.id
+        })}
     >
         <ImageBannerMovie
             source={{ uri: `http://image.tmdb.org/t/p/w500/${item.backdrop_path}`}}

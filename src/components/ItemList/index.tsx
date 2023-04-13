@@ -20,7 +20,7 @@ export default function ItemList({
     return <Container style={styleContainer || {}}>
         <ContainerImagePressable>
             <ImagePosterMovie 
-                source={{ uri: `http://image.tmdb.org/t/p/w200/${item.poster_path}` }}
+                source={{ uri: `http://image.tmdb.org/t/p/w200/${item.poster_path}` }}                
             />
         </ContainerImagePressable>
         <ContainerTitleMovie>
