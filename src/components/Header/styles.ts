@@ -6,8 +6,8 @@ export const Topbar = styled.View`
     height: 70px;
     background-color: #0b1b49eb;
     align-items: center;
-    padding-left: 25px;
-    padding-right: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
     border-bottom-width: 1px;
     border-bottom-color: white;
     border-style: solid;

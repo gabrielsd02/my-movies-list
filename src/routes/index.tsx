@@ -13,6 +13,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import Home from '../pages/Home';
 import Search from '../pages/Search';
+import Movie from '../pages/Movie';
 import Header from '../components/Header';
 import { 
     TextLogout,
@@ -49,10 +50,6 @@ function Routes() {
 
     function CustomDrawerContent(props: DrawerContentComponentProps) {
         
-        const { state } = props;
-        const newState = { ...state} 
-        newState.routes = newState.routes.filter(item => item.name !== 'MovieDetails');
-
         return (
             <View style={{ flex: 1 }}>
                 <ContainerTitleDrawer>
@@ -64,8 +61,7 @@ function Routes() {
                     {...props}                    
                 >
                     <DrawerItemList 
-                        {...props}                    
-                        state={newState}                                 
+                        {...props}                       
                     />            
                 </DrawerContentScrollView>
                 <ContainerLogout>
@@ -125,9 +121,15 @@ function Routes() {
                 />
                 <Drawer.Screen 
                     name={"MovieDetails"}
-                    component={Search}
-                    options={{
-                        header: (props) => <Header {...props} />                        
+                    component={Movie}
+                    initialParams={{ id: null }}                    
+                    options={{                        
+                        header: (props) => <Header {...props} />,
+                        drawerItemStyle: {
+                            height: 0,
+                            width: 0
+                        },
+                        drawerLabel: ''                    
                     }}                    
                 />
             </Drawer.Navigator>

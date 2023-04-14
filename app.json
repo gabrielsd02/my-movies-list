@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "teste-ploomes",
-    "slug": "teste-ploomes",
+    "name": "my-movies-list",
+    "slug": "my-movies-list",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./public/assets/icon.png",

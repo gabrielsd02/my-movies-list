@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Dimensions, ScrollView, Text, View } from 'react-native';
+import { Dimensions, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
-import AnimatedLoader from 'react-native-animated-loader';
 
-import axios from '../../../api';
 import {
     Container,    
     ContainerCarousel,
@@ -14,12 +12,16 @@ import {
     ContainerCategoryMovie
 } from './styles';
 import { Movies } from '../../interfaces/home';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { RootDrawerParamList } from '../../routes/navigationTypes';
 import CarouselCardItem from '../../components/CarouselCardItem';
 import ListMovies from '../../components/ListMovies';
+import Loader from '../../components/Loader';
+import axios from '../../../api';
 
 function Home() {
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
 
     const [loading, setLoading] = useState(true);
     const [pageMoviesPopular, setPageMoviesPopular] = useState(1);
@@ -131,20 +133,9 @@ function Home() {
     }, [])
 
     if(loading) {
-        return <AnimatedLoader
-            visible
-            overlayColor="#1c243bec'"
-            source={require('../../assets/95494-double-loader.json')}
-            animationStyle={{
-                width: '70%',
-                height: '70%',
-                alignItems: 'center',
-                justifyContent: 'center'                
-            }}
-            speed={1}
-        >
-            <Text>Loading movies...</Text>
-        </AnimatedLoader>
+        return <Loader 
+            message='Loading movies...'
+        />
     }
     
     return (
@@ -190,7 +181,8 @@ function Home() {
                     <ListMovies 
                         data={popularMovies}
                         loading={loading}
-                        page={pageMoviesPopular}                    
+                        page={pageMoviesPopular}          
+                        navigation={navigation}          
                         setPage={setPageMoviesPopular}                        
                     />
                 </ContainerListMovies>
@@ -203,7 +195,8 @@ function Home() {
                     <ListMovies 
                         data={topRatedMovies}
                         loading={loading}
-                        page={pageTopRatedMovies}                    
+                        page={pageTopRatedMovies}             
+                        navigation={navigation}          
                         setPage={setPageTopRatedMovies}                        
                     />
                 </ContainerListMovies>

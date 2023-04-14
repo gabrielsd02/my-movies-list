@@ -9,12 +9,13 @@ import {
     ContainerTitleMovie,
     ContainerItemPressable
 } from './styles';
-import { NavigationProp } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { RootDrawerParamList } from '../../routes/navigationTypes';
 
 interface CarouselItem {
     item: Movies['results'][0];
     index: number;
-    navigation: NavigationProp<ReactNavigation.RootParamList>;
+    navigation: DrawerNavigationProp<RootDrawerParamList>;
     numberResults: number;
 }
 
@@ -24,12 +25,14 @@ export function CarouselCardItem({
     navigation,
     numberResults
 }: CarouselItem) {
-
+    
     return <ContainerItemPressable 
         key={index}
-        onPress={() => navigation.navigate('MovieDetails', {
-            id: item.id
-        })}
+        onPress={() => {
+            navigation.navigate('MovieDetails', {
+                id: item.id
+            })
+        }}
     >
         <ImageBannerMovie
             source={{ uri: `http://image.tmdb.org/t/p/w500/${item.backdrop_path}`}}

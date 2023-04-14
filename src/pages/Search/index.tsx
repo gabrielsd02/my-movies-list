@@ -8,6 +8,8 @@ import {
 	Pressable
 } from 'react-native'
 import { FlashList } from '@shopify/flash-list';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { RouteProp } from '@react-navigation/native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
@@ -25,8 +27,14 @@ import {
 import { Movies } from '../../interfaces/home';
 import axios from '../../../api';
 import ItemList from '../../components/ItemList';
+import { RootDrawerParamList } from '../../routes/navigationTypes';
 
-function Search() {
+interface SearchProps {
+    navigation: DrawerNavigationProp<RootDrawerParamList, 'Search'>;
+    route: RouteProp<RootDrawerParamList, 'Search'>;
+}
+
+function Search({ navigation }: SearchProps) {
 
 	const [word, setWord] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
@@ -179,6 +187,7 @@ function Search() {
 			>
 				<FlashList 
 					data={moviesResults.results}
+					keyExtractor={(movie) => movie.id.toString()}
 					estimatedItemSize={(moviesResults.results && moviesResults?.results?.length) ? moviesResults?.results?.length : undefined}
 					showsVerticalScrollIndicator					
 					refreshing={loading}
@@ -186,7 +195,9 @@ function Search() {
 					numColumns={2}     					
 					renderItem={({ item, index }) => (
 						<ItemList 
+							lastRoute={'Search'}
 							item={item}
+							navigation={navigation}
 							styleContainer={{
 								width: 150,
 								height: 250,
