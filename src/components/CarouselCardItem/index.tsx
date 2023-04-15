@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Movies } from '../../interfaces/home';
+import { Movies } from '../../interfaces/movies';
 import {
     TextTitle,
     CircleElement,

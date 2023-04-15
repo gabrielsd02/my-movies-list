@@ -4,23 +4,61 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
     Topbar,
     TextNameApp,
+    ContainerIcons,
     ContainerNameApp,
     IconPressableContainer
 } from './styles'
 
+interface RouteParams {
+    lastRoute?: string;
+}
+
 function Header(props: DrawerHeaderProps) {
     
+    const isHome = props.route && props.route.name === 'Home';
+
+    const handleBack = () => {
+
+        const navigation = props.navigation;
+
+        if(props.route && props.route.params) {
+
+            const params: RouteParams = props.route.params;            
+            const lastRoute = params.lastRoute;
+            if(lastRoute) {
+                return navigation.navigate(lastRoute);
+            }
+
+        }
+
+        if(navigation.canGoBack()) navigation.goBack();
+
+    };
+    
     return (
-        <Topbar>
-            <IconPressableContainer
-                onPress={() => props.navigation.toggleDrawer()}
-            >                    
-                <FontAwesome 
-                    color={'white'}
-                    size={26}
-                    name='bars'
-                />
-            </IconPressableContainer>
+        <Topbar>    
+            <ContainerIcons>
+                {(!isHome) && (
+                    <IconPressableContainer
+                        onPress={handleBack}
+                    >                    
+                        <FontAwesome 
+                            color={'white'}
+                            size={32}
+                            name='arrow-circle-left'
+                        />
+                    </IconPressableContainer>
+                )}
+                <IconPressableContainer
+                    onPress={() => props.navigation.toggleDrawer()}
+                >                    
+                    <FontAwesome 
+                        color={'white'}
+                        size={32}
+                        name='bars'
+                    />
+                </IconPressableContainer>
+            </ContainerIcons>        
             <ContainerNameApp>
                 <FontAwesome 
                     name={'video-camera'}

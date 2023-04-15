@@ -1,6 +1,6 @@
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 
-import { Movies } from "../../interfaces/home";
+import { Movies } from "../../interfaces/movies";
 import { RootDrawerParamList } from "../../routes/navigationTypes";
 import {
     Container,

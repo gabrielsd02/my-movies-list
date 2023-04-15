@@ -10,7 +10,7 @@ function Loader({
     return <AnimatedLoader
         visible
         overlayColor="#1c243bec'"
-        source={require('../../assets/95494-double-loader.json')}
+        source={require('../../assets/json/double-loader.json')}
         animationStyle={{
             width: '70%',
             height: '70%',

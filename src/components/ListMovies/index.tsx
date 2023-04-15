@@ -1,7 +1,6 @@
-import { memo } from 'react';
 import { FlashList } from '@shopify/flash-list';
 
-import { Movies } from '../../interfaces/home';
+import { Movies } from '../../interfaces/movies';
 import ItemList from '../ItemList';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../routes/navigationTypes';
@@ -25,7 +24,7 @@ export default function ListMovies({
     return <FlashList 
         data={data.results}
         keyExtractor={(movie) => movie.id.toString()}
-        estimatedItemSize={data?.results?.length || 0}
+        estimatedItemSize={data?.results?.length || undefined}
         contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 5 }}
         renderItem={({ item, index }) => <ItemList 
             item={item}

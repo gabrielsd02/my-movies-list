@@ -24,7 +24,7 @@ import {
 	PaginationBoxArrow,
 	ContainerPagination
 } from './styles';
-import { Movies } from '../../interfaces/home';
+import { Movies } from '../../interfaces/movies';
 import axios from '../../../api';
 import ItemList from '../../components/ItemList';
 import { RootDrawerParamList } from '../../routes/navigationTypes';

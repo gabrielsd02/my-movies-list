@@ -11,7 +11,7 @@ import {
     ContainerListMovies,
     ContainerCategoryMovie
 } from './styles';
-import { Movies } from '../../interfaces/home';
+import { Movies } from '../../interfaces/movies';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../routes/navigationTypes';
 import CarouselCardItem from '../../components/CarouselCardItem';
@@ -142,7 +142,10 @@ function Home() {
         <Container>
             <ScrollView
                 showsVerticalScrollIndicator                
-                contentContainerStyle={{ flexGrow: 1 }}
+                contentContainerStyle={{ 
+                    flexGrow: 1, 
+                    paddingVertical: 10 
+                }}
                 style={{ 
                     flex: 1, 
                     width: '100%'

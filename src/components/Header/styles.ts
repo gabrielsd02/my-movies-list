@@ -14,6 +14,14 @@ export const Topbar = styled.View`
     justify-content: space-between;
 `;
 
+export const ContainerIcons = styled.View`
+    flex-direction: row;
+    gap: 30px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+`;
+
 export const IconPressableContainer = styled.TouchableOpacity.attrs({
     activeOpacity: 0.4
 })` 

@@ -1,51 +1,57 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, createAction, createSlice } from '@reduxjs/toolkit';
 
-interface UserState {
-  authenticated: boolean;
-  user: { [key: string]: any };
-}
+import {
+    Action,
+    UserState
+} from './interfaceStore';
 
-interface Action {
-  type: string;
-  payload?: UserState;
-}
-
-interface InitialState {
-  authenticated: boolean;
-  user: UserState;
-}
-
-const initialState: InitialState = {
+const initialState: UserState = {
     authenticated: false,
-    user: { 
-        authenticated: false, 
-        user: {} 
-    },
+    user: ''
 };
 
+export const logout = createAction('LOGOUT');
+
 function authReducer(state = initialState, action: Action) {
-  switch (action.type) {
-    case 'AUTHENTICATE':
-      return {
-        ...state,
-        authenticated: true,
-        user: action.payload!,
-      };
-    case 'LOGOUT':
-      return {
-        ...state,
-        authenticated: false,
-        user: { 
-          authenticated: 
-          false, 
-          user: {} 
-        },
-      };
-    default:
-      return state;
-  }
+  	switch (action.type) {
+		case 'AUTHENTICATE':
+			return {
+				...state,
+				authenticated: true,
+				user: action.payload!,
+			};
+		case 'LOGOUT':
+			return {
+				...state,
+				authenticated: false,
+				user: '',
+			};
+		default:
+		return state;
+  	}
 }
 
-const store = configureStore({ reducer: authReducer });
+const authSlice = createSlice({
+    name: 'userAuth',
+    initialState,
+    reducers: {
+        setSignIn: (state: UserState, action: { payload: UserState }) => {
+
+            state.authenticated = action.payload.authenticated;
+            state.user = action.payload.user;
+
+        },
+        setSignOut: (state) => {
+			
+            state.user = '';
+            state.authenticated = false;
+
+        }
+    }
+});
+
+export const { setSignIn, setSignOut } = authSlice.actions;
+
+const store = configureStore({ reducer: authSlice.reducer });
 
 export default store;
