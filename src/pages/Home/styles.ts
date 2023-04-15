@@ -13,7 +13,7 @@ export const ContainerCarousel = styled.View`
     background-color: rgba(0, 0 , 0, 0.3); 
     align-items: center; 
     margin-top: 10px;
-    justify-content: flex-start;
+    justify-content: center;
 `;
 
 export const ContainerCategoryMovie = styled.View`

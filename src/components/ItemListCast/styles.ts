@@ -12,7 +12,7 @@ export const Container = styled.View`
 `;
 
 export const ContainerImagePressable = styled.TouchableOpacity.attrs({
-    activeOpacity: 0.4
+    activeOpacity: 1
 })`
     height: 85%;
     width: 100%;

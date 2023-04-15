@@ -47,3 +47,16 @@ export const TextTitle = styled.Text.attrs({
     text-align: center;
     font-weight: bold;    
 `;
+
+export const ContainerPosterVoid = styled.View`
+    flex-grow: 1; 
+    justify-content: center; 
+    align-items: center; 
+    background-color: gray; 
+    border-top-right-radius: 5px; 
+    border-top-left-radius: 5px;
+`;
+
+export const TextPosterVoid = styled.Text`
+    color: white;
+`;

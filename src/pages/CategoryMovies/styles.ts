@@ -1,8 +1,4 @@
 import styled from 'styled-components/native';
-import { StatusBar } from 'react-native';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
-
-const heightBar = StatusBar.currentHeight ? StatusBar.currentHeight : getStatusBarHeight();
 
 export const Container = styled.SafeAreaView`
     flex: 1;
@@ -45,31 +41,16 @@ export const PageText = styled.Text`
 export const ContainerList = styled.View`
     width: 95%;		
     flex-grow: 1;			
-    margin: 10px 0px;
+    margin-bottom: 10px;
     border-radius: 5px;
     padding: 10px 8px;
 `;
 
-export const LabelInput = styled.Text`
-    position: absolute;
-    color: white;
-    opacity: 0.5;
-`;
-
 export const InputContainer = styled.View`
     width: 100%; 
-    align-items: center; 
+    align-items: center;
+    margin-top: 10px; 
     justify-content: center; 
-    margin-top: ${heightBar}px;
-    margin-bottom: 10px;     
-    padding-left: 20px;
-    padding-right: 20px;
-`;
-
-export const SubInputContainer = styled.View`
-    position: relative; 
-    width: 100%; 
-    flex-direction: row;
 `;
 
 export const TextListEmpty = styled.Text`
@@ -77,4 +58,37 @@ export const TextListEmpty = styled.Text`
     color: gray;
     font-weight: bold;
     text-align: center;
+`;
+
+export const ContainerGenresMovie = styled.View`
+    align-items: center;
+    justify-content: flex-start;                            
+    padding: 5px;
+    flex-direction: row;
+    overflow: hidden;        
+    flex-wrap: wrap;
+`;
+
+export const BackgroundGenre = styled.TouchableOpacity.attrs({
+    activeOpacity: 0.4
+})`
+    border-radius: 20px;
+    margin: 5px;
+    border-width: 1px;
+    border-color: gray;
+    padding: 5px 10px;
+`;
+
+export const TextGenre = styled.Text`
+    color: white;
+    font-size: 12px;
+`;
+
+export const Title = styled.Text`
+    color: white;
+    font-weight: bold;
+    width: 95%;
+    font-size: 22px;
+    margin-left: 10px;
+    text-align: left;
 `;

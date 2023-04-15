@@ -34,3 +34,8 @@ export interface MovieCastProps {
   department: string;
   job: string;
 }
+
+export interface GenresMovies {
+  id: number;
+  name: string;
+}

@@ -7,11 +7,13 @@ import {
     TextTitle,
     ImagePosterMovie,
     ContainerTitleMovie,
-    ContainerImagePressable
+    ContainerImagePressable,
+    ContainerPosterVoid,
+    TextPosterVoid
 } from './styles';
 
 interface ItemListProps {
-    lastRoute?: "Home" | "Search"; 
+    lastRoute?: "Home" | "Search" | "CategoryMovies"; 
     item: Movies['results'][0];
     styleContainer?: object;
     navigation?: DrawerNavigationProp<RootDrawerParamList>;
@@ -37,9 +39,15 @@ export default function ItemList({
         <ContainerImagePressable
             onPress={handleImagePress}
         >
-            <ImagePosterMovie 
-                source={{ uri: `http://image.tmdb.org/t/p/w200/${item.poster_path}` }}                
-            />
+            {(item.poster_path) ? (
+                <ImagePosterMovie 
+                    source={{ uri: `http://image.tmdb.org/t/p/w200/${item.poster_path}` }}                
+                />
+            ) : <ContainerPosterVoid>
+                <TextPosterVoid>
+                    No Photos
+                </TextPosterVoid>
+            </ContainerPosterVoid>}
         </ContainerImagePressable>
         <ContainerTitleMovie>
             <TextTitle>

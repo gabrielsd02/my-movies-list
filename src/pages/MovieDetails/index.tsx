@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { 
-    View, 
-    Text, 
-    Alert, 
-    ImageBackground, 
-    ScrollView, 
-    TouchableOpacity, 
+    Alert,  
+    Share,
+    ScrollView,  
     BackHandler 
 } from 'react-native';
 import { Image } from 'expo-image';
@@ -68,6 +65,7 @@ interface MovieDetailsProps {
 function MovieDetails({ route, navigation }: MovieDetailsProps) {
     
     const [loading, setLoading] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
     const [movieInfo, setMovieInfo] = useState({} as MovieInfoProps);
     const [movieCast, setMovieCast] = useState<MovieCastProps[]>([]);    
     
@@ -130,6 +128,22 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
         return `#${randomColor}`;
     };
 
+    const onShare = async () => {
+        
+        try {
+
+            await Share.share({
+                title: 'This movie is awesome!',
+                message: `Name: ${movieInfo.title} | Release Date and Running Time: ${movieInfo.release_date} - ${movieInfo.runtime}min | Image Location: http://image.tmdb.org/t/p/w500/${movieInfo.backdrop_path ?? movieInfo.poster_path}`,
+                url: `http://image.tmdb.org/t/p/w500/${movieInfo.backdrop_path ?? movieInfo.poster_path}`
+            });
+            
+        } catch (error: any) {
+            console.error(error);
+            Alert.alert(error.message);
+        }
+    }
+
     useEffect(() => {
 
         consultMovie();
@@ -165,7 +179,9 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
                         >
                             <ContainerInsideImage>
                                 <ContainerIcons>
-                                    <PressableAroundIcon>
+                                    <PressableAroundIcon
+                                        onPress={onShare}
+                                    >
                                         <FontAwesome 
                                             color={'#f2f2f2'}
                                             size={26}

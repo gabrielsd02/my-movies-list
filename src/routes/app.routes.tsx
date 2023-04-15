@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native';
+import { 
+    useDispatch, 
+    useSelector 
+} from 'react-redux';
 import { 
     DrawerItemList, 
     createDrawerNavigator,
@@ -10,9 +12,11 @@ import {
     DrawerNavigationOptions
 } from '@react-navigation/drawer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Home from '../pages/Home';
 import Search from '../pages/Search';
+import CategoryMovies from '../pages/CategoryMovies';
 import MovieDetails from '../pages/MovieDetails';
 import Header from '../components/Header';
 import { 
@@ -20,15 +24,18 @@ import {
     TitleDrawer,
     ContainerLogout,
     ContainerTitleDrawer,
-    ContainerIconTextLogout
+    ContainerIconTextLogout,
+    HeaderDrawerItems
 } from './styles';
 import { RootDrawerParamList } from './navigationTypes';
 import { setSignOut } from '../store';
+import { UserState } from '../store/interfaceStore';
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
 function AppRoutes() {
 
+    const selector = useSelector((state: UserState) => state);
     const dispatch = useDispatch();
 
     const screenNavigatorOption = {
@@ -49,27 +56,35 @@ function AppRoutes() {
         }
     } as DrawerNavigationOptions;
 
+    async function logOut() {
+        await AsyncStorage.removeItem("@my-movies-list:user");
+        dispatch(setSignOut());
+    }
+    
     function CustomDrawerContent(props: DrawerContentComponentProps) {
         
         return (
-            <View style={{ flex: 1 }}>
+            <HeaderDrawerItems>
                 <ContainerTitleDrawer>
-                    <TitleDrawer>
-                        MyMoviesList
+                    <TitleDrawer numberOfLines={1}>
+                        Welcome!
+                    </TitleDrawer>
+                    <TitleDrawer numberOfLines={1}>
+                        {selector.user}
                     </TitleDrawer>
                 </ContainerTitleDrawer>
                 <DrawerContentScrollView 
                     {...props}                    
                 >
                     <DrawerItemList 
-                        {...props}                       
+                        {...props}                                               
                     />            
                 </DrawerContentScrollView>
                 <ContainerLogout>
                     <TouchableOpacity 
                         style={{ paddingVertical: 5 }}
                         activeOpacity={0.4}
-                        onPress={() => dispatch(setSignOut())}
+                        onPress={logOut}
                     >
                         <ContainerIconTextLogout>
                             <FontAwesome 
@@ -83,7 +98,7 @@ function AppRoutes() {
                         </ContainerIconTextLogout>
                     </TouchableOpacity>
                 </ContainerLogout>
-            </View>
+            </HeaderDrawerItems>
         );
 
     }
@@ -99,6 +114,9 @@ function AppRoutes() {
                 component={Home}
                 options={{     
                     header: (props) => <Header {...props} />,
+                    drawerItemStyle: {
+                        marginTop: -5
+                    },  
                     drawerLabel: 'Home',                                                     
                     drawerIcon: ({ size, color }) => <FontAwesome 
                         color={color}
@@ -122,6 +140,22 @@ function AppRoutes() {
                         name={'search'}
                     />
                 }}
+            />
+            <Drawer.Screen 
+                name={"CategoryMovies"}
+                component={CategoryMovies}                    
+                options={{
+                    header: (props) => <Header {...props} />,
+                    drawerLabel: 'Categories',                                                     
+                    drawerIcon: ({ size, color }) => <FontAwesome 
+                        color={color}
+                        size={size}
+                        name={'bars'}
+                        style={{
+                            marginTop: 2
+                        }}
+                    />
+                }}                    
             />
             <Drawer.Screen 
                 name={"MovieDetails"}

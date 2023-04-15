@@ -1,24 +1,37 @@
+import { RefreshControl } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 import { Movies } from '../../interfaces/movies';
-import ItemList from '../ItemList';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../routes/navigationTypes';
+import ItemList from '../ItemList';
 
 interface ListMoviesProps {
     data: Movies;
     loading: boolean;
-    page: number;
+    page?: number;
+    numberOfColumns?: number;
+    horizontal?: boolean;
+    lastRoute?: "Home" | "Search" | "CategoryMovies"; 
     navigation?: DrawerNavigationProp<RootDrawerParamList>;
-    setPage(value: number): void;
+    styleItem?: object;
+    setPage?: (value: number) => void;
+    functionRefresh?: () => void;
+    componentListEmpty?: () => JSX.Element;
 }
 
 export default function ListMovies({
+    page,
     data,
     loading,
-    page,
+    lastRoute,
+    styleItem,
     navigation,
-    setPage
+    horizontal=true,
+    numberOfColumns,
+    setPage,
+    functionRefresh,
+    componentListEmpty
 }: ListMoviesProps) {
 
     return <FlashList 
@@ -26,16 +39,30 @@ export default function ListMovies({
         keyExtractor={(movie) => movie.id.toString()}
         estimatedItemSize={data?.results?.length || undefined}
         contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 5 }}
+        refreshing={loading}                        
+        horizontal={horizontal}
+        numColumns={numberOfColumns}
+        ListEmptyComponent={componentListEmpty}                        
+        refreshControl={(
+            <RefreshControl 
+                refreshing={loading || false}
+                tintColor={'#182C6C'}
+                colors={['#182C6C']}
+                progressBackgroundColor={'white'}
+                onRefresh={functionRefresh ?? undefined}
+            />
+        )}        
         renderItem={({ item, index }) => <ItemList 
             item={item}
+            lastRoute={lastRoute}
+            styleContainer={styleItem}
             key={index}
             navigation={navigation}
         />}
         onEndReached={() => {
-            if(loading || data.total_pages <= page) return;
-            setPage(page + 1);
-        }}                                        
-        horizontal
+            if(loading || (page && data.total_pages <= page)) return;
+            if(setPage) setPage(page! + 1);
+        }}
     />
 
 }

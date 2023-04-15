@@ -2,9 +2,11 @@ import React, { useState } from 'react'
 import { 
     Platform,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native'
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Toast from 'react-native-toast-message';
 
@@ -29,17 +31,32 @@ function SignIn() {
     const dispatch = useDispatch();
 
     const [user, setUser] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState<string | null>(null);
     const [showPass, setShowPass] = useState(false);
     
-    async function signIn() {        
+    async function signIn() {   
+        
+        setLoading(true);
 
-        dispatch(
-            setSignIn({
+        try {
+
+            const dataCache = {
                 authenticated: true,
                 user: user!
-            })
-        );
+            };
+
+            dispatch(
+                setSignIn(dataCache)
+            );
+
+            await AsyncStorage.setItem("@my-movies-list:user", JSON.stringify(dataCache));
+
+        } catch(e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }         
 
     }
 
@@ -49,7 +66,7 @@ function SignIn() {
             return Toast.show({
                 type: 'error',
                 autoHide: true,                
-                text1: 'The user field is mandatory!'
+                text1: 'The username field is mandatory!'
             });
         }
 
@@ -58,6 +75,14 @@ function SignIn() {
                 type: 'error',
                 autoHide: true,
                 text1: 'The password field is mandatory!'
+            });
+        }
+
+        if(user !== 'Gabriel' && password !== '123') {
+            return Toast.show({
+                type: 'error',
+                autoHide: true,
+                text1: 'The username or password is wrong'
             });
         }
 
@@ -108,7 +133,7 @@ function SignIn() {
                             <TextInput 
                                 value={user ?? ''}
                                 onChangeText={(text: string)=> setUser(text)}
-                                placeholder='User'
+                                placeholder='Username'
                                 placeholderTextColor={'gray'}
                                 style={{
                                     borderWidth: 1,
@@ -156,12 +181,21 @@ function SignIn() {
                                 <TextButton>
                                     LOGIN
                                 </TextButton>
+                                {(loading) && <ActivityIndicator 
+                                    color={'white'}
+                                    animating
+                                    size={24}
+                                    style={{
+                                        marginLeft: 10
+                                    }}
+                                />}
                             </ButtonLogin>
                         </ContainerButton>
                     </ContainerAroundElements>
                 </ContainerKeyboard>
                 <Toast 
-                    autoHide                    
+                    autoHide    
+                    bottomOffset={70}                
                     visibilityTime={5000}
                     position='bottom'
                 />

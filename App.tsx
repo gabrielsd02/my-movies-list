@@ -11,6 +11,7 @@ export default function App() {
       <Provider store={store}>
         <StatusBar 
             barStyle={'default'}
+            translucent
         />
         <Toast />
         <Routes />

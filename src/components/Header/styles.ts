@@ -1,9 +1,14 @@
+import { StatusBar } from "react-native";
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import styled from "styled-components/native";
+
+const heightBar = StatusBar.currentHeight ? StatusBar.currentHeight : getStatusBarHeight();
 
 export const Topbar = styled.View`
     flex-direction: row;
     width: 100%;
     height: 70px;
+    margin-top: ${heightBar}px;
     background-color: #0b1b49eb;
     align-items: center;
     padding-left: 20px;

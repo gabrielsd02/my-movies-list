@@ -1,16 +1,15 @@
 import styled from 'styled-components/native';
 import { Dimensions } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('screen');
 
 export const Container = styled.SafeAreaView`
     width: ${width}px;
-    height: ${height}px;
+    height: ${height}px;    
     align-items: center;
     margin: 0px;
     position: relative;
     justify-content: center;
-    background-color: #1c243bec;
 `;
 
 export const ImageBack = styled.ImageBackground.attrs({
@@ -24,7 +23,7 @@ export const ImageBack = styled.ImageBackground.attrs({
 
 export const ContainerKeyboard = styled.KeyboardAvoidingView`
     position: absolute; 
-    top: 0px; 
+    top: 20px; 
     left: 0px; 
     right: 0px; 
     bottom: 0px; 
@@ -79,8 +78,8 @@ export const ContainerPassword = styled.View`
 
 export const ContainerButton = styled.View`
     width: 100%;
-    align-items: flex-end;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
 `;
 
@@ -88,13 +87,19 @@ export const ButtonLogin = styled.TouchableOpacity.attrs({
     activeOpacity: 0.4
 })`
     padding: 10px;
-    border-radius: 5px;                                
-    background-color: green;
+    width: 100%;    
+    border-radius: 5px;       
+    flex-direction: row;
+    border-width: 1px;
+    align-items: center;
+    justify-content: center;
+    background-color: #001bb1cf;
 `;
 
 export const TextButton = styled.Text`
     color: white;
     font-weight: bold;
+    text-align: center;
     font-size: 20px;
     letter-spacing: 3px;
 `;

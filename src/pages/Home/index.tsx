@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Dimensions, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { ActivityIndicator, Dimensions, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
 
@@ -10,7 +9,7 @@ import {
     TextCategoryMovie,
     ContainerListMovies,
     ContainerCategoryMovie
-} from './styles';
+} from './styles'; 
 import { Movies } from '../../interfaces/movies';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../routes/navigationTypes';
@@ -23,16 +22,21 @@ function Home() {
 
     const navigation = useNavigation<DrawerNavigationProp<RootDrawerParamList>>();
 
-    const [loading, setLoading] = useState(true);
     const [pageMoviesPopular, setPageMoviesPopular] = useState(1);
-    const [pageTopRatedMovies, setPageTopRatedMovies] = useState(1);
-    const [moviesUpcoming, setMoviesUpcoming] = useState({} as Movies);
-    const [topRatedMovies, setTopRatedMovies] = useState({} as Movies);
     const [popularMovies, setPopularMovies] = useState({} as Movies);
+    const [loadingMoviesPopular, setLoadingMoviesPopular] = useState(false);
+
+    const [pageTopRatedMovies, setPageTopRatedMovies] = useState(1);
+    const [topRatedMovies, setTopRatedMovies] = useState({} as Movies);
+    const [loadingMoviesTopRated, setLoadingMoviesTopRated] = useState(false);
+
+    const [moviesUpcoming, setMoviesUpcoming] = useState({} as Movies);
+    const [loadingMoviesUpcoming, setLoadingMoviesUpcoming] = useState(false);
+    
 
     async function consultMoviesUpcoming() {
 
-        setLoading(true);
+        setLoadingMoviesUpcoming(true);
 
         try {
 
@@ -47,14 +51,14 @@ function Home() {
         } catch(e: any) {
             console.error(e?.response ? e.response: e);
         } finally {
-            setLoading(false);            
+            setLoadingMoviesUpcoming(false);           
         }
 
     }
     
     async function consultMoviesPopular() {
 
-        setLoading(true);
+        setLoadingMoviesPopular(true);
 
         try {
 
@@ -81,14 +85,14 @@ function Home() {
         } catch(e: any) {
             console.error(e?.response ? e.response: e);
         } finally {
-            setLoading(false);            
+            setLoadingMoviesPopular(false);
         }
 
     }
 
     async function consultMoviesTopRated() {
 
-        setLoading(true);
+        setLoadingMoviesTopRated(true);
 
         try {
 
@@ -115,7 +119,7 @@ function Home() {
         } catch(e: any) {
             console.error(e?.response ? e.response: e);
         } finally {
-            setLoading(false);            
+            setLoadingMoviesTopRated(false);         
         }
 
     }
@@ -126,17 +130,11 @@ function Home() {
 
     useEffect(() => {
         consultMoviesTopRated();
-    }, [pageTopRatedMovies])
+    }, [pageTopRatedMovies]);
 
     useEffect(() => {
         consultMoviesUpcoming();
-    }, [])
-
-    if(loading) {
-        return <Loader 
-            message='Loading movies...'
-        />
-    }
+    }, []);
     
     return (
         <Container>
@@ -158,11 +156,11 @@ function Home() {
                     </TextCategoryMovie>
                 </ContainerCategoryMovie>
                 <ContainerCarousel>                    
-                    <Carousel 
+                    {(!loadingMoviesUpcoming) ? <Carousel 
                         mode={'parallax'}
                         width={Dimensions.get('window').width - 15}
                         height={250}
-                        loop
+                        loop                        
                         autoPlay
                         autoPlayInterval={3000}
                         data={moviesUpcoming.results}                        
@@ -173,7 +171,10 @@ function Home() {
                             navigation={navigation}
                             numberResults={moviesUpcoming.results.length}
                         />}
-                    />
+                    /> : <ActivityIndicator 
+                        color={'white'}
+                        size={30}                        
+                    />}
                 </ContainerCarousel>
                 <ContainerCategoryMovie>
                     <TextCategoryMovie>
@@ -183,7 +184,7 @@ function Home() {
                 <ContainerListMovies>
                     <ListMovies 
                         data={popularMovies}
-                        loading={loading}
+                        loading={loadingMoviesPopular}
                         page={pageMoviesPopular}          
                         navigation={navigation}          
                         setPage={setPageMoviesPopular}                        
@@ -197,7 +198,7 @@ function Home() {
                 <ContainerListMovies>
                     <ListMovies 
                         data={topRatedMovies}
-                        loading={loading}
+                        loading={loadingMoviesTopRated}
                         page={pageTopRatedMovies}             
                         navigation={navigation}          
                         setPage={setPageTopRatedMovies}                        
