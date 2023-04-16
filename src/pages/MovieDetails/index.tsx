@@ -1,4 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { 
+    useEffect, 
+    useState,
+    useCallback 
+} from 'react';
 import { 
     Alert,  
     Share,
@@ -6,10 +10,11 @@ import {
     BackHandler 
 } from 'react-native';
 import { Image } from 'expo-image';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { FlashList } from '@shopify/flash-list';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { 
     Title,
@@ -36,26 +41,14 @@ import {
     ContainerImageCompany,
     ContainerDateAndScoreMovie
 } from './styles';
+import { 
+    MovieCastProps, 
+    MovieInfoProps 
+} from '../../interfaces/movies';
 import { RootDrawerParamList } from '../../routes/navigationTypes';
-import { MovieCastProps, Movies } from '../../interfaces/movies';
 import axios from '../../../api';
 import Loader from '../../components/Loader';
 import ItemListCast from '../../components/ItemListCast';
-
-type MovieInfoProps = Omit<Movies['results'][0], "genre_ids"> & {
-    genres: {
-        id: number;
-        name: string;
-    }[];
-    production_companies: {
-        id: number;
-        logo_path?: string;
-        name: string;
-        origin_country: string;
-    }[];
-    runtime: number;
-    status: string;
-}
 
 interface MovieDetailsProps {
     navigation: DrawerNavigationProp<RootDrawerParamList, 'MovieDetails'>;
@@ -66,6 +59,7 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
     
     const [loading, setLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+    const [favoriteMovies, setFavoriteMovies] = useState<MovieInfoProps[]>([]);
     const [movieInfo, setMovieInfo] = useState({} as MovieInfoProps);
     const [movieCast, setMovieCast] = useState<MovieCastProps[]>([]);    
     
@@ -83,10 +77,9 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
 
     }
     
-    async function consultMovie() {
-
-        const id = route.params.id;
+    async function consultMovie() {        
         
+        const id = route.params.id;
         if(!id) return Alert.alert("Error", "ID movie not found");
         setLoading(true);
 
@@ -107,11 +100,58 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
                 release_date: releaseDateFormatted
             });
 
+            await consultFavoriteMovies(id);
+
         } catch(e: any) {
             console.error(e);
             Alert.alert("Error", "Movie not found");
         } finally {
             setLoading(false);
+        }
+
+    }
+
+    async function updateMovieFavorite(willLike: boolean) {
+        
+        try {
+            
+            if(willLike) {
+                
+                await AsyncStorage.setItem("@my-movies-list:favorites-movies", JSON.stringify(favoriteMovies.concat(movieInfo)));
+                setIsLiked(willLike);
+
+            } else {
+
+                const otherFavoriteMovies = favoriteMovies.filter((movie) => movie.id !== movieInfo.id);                
+                await AsyncStorage.setItem("@my-movies-list:favorites-movies", JSON.stringify(otherFavoriteMovies));
+                setIsLiked(willLike);
+
+            }
+
+        } catch(e: any) {
+            console.error(e);
+            Alert.alert("Error", e.message ? e.message : "There was a error when performing the function of favorite movie. Please verify your connection with the network.");
+        }
+
+    }
+
+    async function consultFavoriteMovies(id: number) {
+        
+        try {
+
+            const favoritesMoviesStringify = await AsyncStorage.getItem("@my-movies-list:favorites-movies");        
+            
+            if(favoritesMoviesStringify) {
+
+                const favoritesMovies = JSON.parse(favoritesMoviesStringify) as MovieInfoProps[];                                                
+                const isAlreadyLiked = favoritesMovies.some((movie) => movie.id == id);                 
+                setFavoriteMovies(favoritesMovies);               
+                setIsLiked(isAlreadyLiked);
+
+            }
+
+        } catch(e: any) {
+            console.error(e);
         }
 
     }
@@ -144,9 +184,7 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
         }
     }
 
-    useEffect(() => {
-
-        consultMovie();
+    useEffect(() => {            
 
         const backAction = () => {
                         
@@ -167,7 +205,13 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
 
         return () => backHandler.remove();
 
-    }, [route]);
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            consultMovie();
+        }, [route])
+    );
     
     return (
         <Container>
@@ -188,11 +232,13 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
                                             name={'share-alt'}
                                         />
                                     </PressableAroundIcon>
-                                    <PressableAroundIcon>
+                                    <PressableAroundIcon
+                                        onPress={() => updateMovieFavorite(!isLiked)}
+                                    >
                                         <FontAwesome 
                                             color={'red'}
                                             size={26}
-                                            name={'heart-o'}
+                                            name={isLiked ? 'heart' : 'heart-o'}
                                         />
                                     </PressableAroundIcon>
                                 </ContainerIcons>
@@ -297,7 +343,7 @@ function MovieDetails({ route, navigation }: MovieDetailsProps) {
                                     <FlashList 
                                         data={movieCast}
                                         keyExtractor={(movie) => movie.id.toString()}
-                                        estimatedItemSize={movieCast.length || undefined}
+                                        estimatedItemSize={movieCast.length || 20}
                                         renderItem={({ item, index }) => <ItemListCast 
                                             item={item}
                                             key={index}

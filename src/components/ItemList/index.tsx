@@ -13,7 +13,7 @@ import {
 } from './styles';
 
 interface ItemListProps {
-    lastRoute?: "Home" | "Search" | "CategoryMovies"; 
+    lastRoute?: "Home" | "Search" | "CategoryMovies" | "Favorites"; 
     item: Movies['results'][0];
     styleContainer?: object;
     navigation?: DrawerNavigationProp<RootDrawerParamList>;

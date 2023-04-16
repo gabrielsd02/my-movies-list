@@ -3,7 +3,7 @@ export interface Movies {
     results: {
       adult: boolean;
       backdrop_path: string;
-      genre_ids: number[];
+      genre_ids?: number[];
       id: number;
       original_language: string;
       original_title: string;
@@ -33,6 +33,21 @@ export interface MovieCastProps {
   credit_id: string;
   department: string;
   job: string;
+}
+
+export interface MovieInfoProps extends Omit<Movies['results'][0], "genre_ids"> {
+  genres: {
+      id: number;
+      name: string;
+  }[];
+  production_companies: {
+      id: number;
+      logo_path?: string;
+      name: string;
+      origin_country: string;
+  }[];
+  runtime: number;
+  status: string;
 }
 
 export interface GenresMovies {

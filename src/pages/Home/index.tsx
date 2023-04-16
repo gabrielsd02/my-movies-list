@@ -1,6 +1,11 @@
-import { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
+import { 
+    ActivityIndicator, 
+    Alert, 
+    Dimensions, 
+    ScrollView 
+} from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Carousel from 'react-native-reanimated-carousel';
 
 import {
@@ -15,7 +20,6 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '../../routes/navigationTypes';
 import CarouselCardItem from '../../components/CarouselCardItem';
 import ListMovies from '../../components/ListMovies';
-import Loader from '../../components/Loader';
 import axios from '../../../api';
 
 function Home() {
@@ -50,6 +54,7 @@ function Home() {
 
         } catch(e: any) {
             console.error(e?.response ? e.response: e);
+            Alert.alert("Error!", e.message ? e.message : "There was a error when performing the function of consult upcoming movies. Please, verify your connection with the network.")
         } finally {
             setLoadingMoviesUpcoming(false);           
         }
@@ -84,6 +89,7 @@ function Home() {
 
         } catch(e: any) {
             console.error(e?.response ? e.response: e);
+            Alert.alert("Error!", e.message ? e.message : "There was a error when performing the function of consult popular movies. Please, verify your connection with the network.")
         } finally {
             setLoadingMoviesPopular(false);
         }
@@ -118,23 +124,30 @@ function Home() {
 
         } catch(e: any) {
             console.error(e?.response ? e.response: e);
+            Alert.alert("Error!", e.message ? e.message : "There was a error when performing the function of consult top rated movies. Please verify your connection with the network.")
         } finally {
             setLoadingMoviesTopRated(false);         
         }
 
     }
 
-    useEffect(() => {
-        consultMoviesPopular();
-    }, [pageMoviesPopular]);
+    useFocusEffect(
+        useCallback(() => {
+            consultMoviesPopular(); 
+        }, [pageMoviesPopular])
+    );
 
-    useEffect(() => {
-        consultMoviesTopRated();
-    }, [pageTopRatedMovies]);
+    useFocusEffect(
+        useCallback(() => {
+            consultMoviesTopRated(); 
+        }, [pageTopRatedMovies])
+    );
 
-    useEffect(() => {
-        consultMoviesUpcoming();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            consultMoviesUpcoming(); 
+        }, [])
+    );
     
     return (
         <Container>

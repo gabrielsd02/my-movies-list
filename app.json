@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./public/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.gabrielsd02.mymovieslist"
     },
     "web": {
       "favicon": "./public/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "13ebb322-3bb0-4bb5-90ea-b87643fd6189"
+      }
     }
   }
 }

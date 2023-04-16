@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { View, ScrollView } from 'react-native';
+import React, { 
+    useState, 
+    useEffect, 
+    useCallback 
+} from 'react';
+import { 
+    View, 
+    ScrollView, 
+    Alert 
+} from 'react-native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useFocusEffect } from '@react-navigation/native';
 
 import {
     Title,
-	PageText,
 	Container,
 	TextListEmpty,
 	ContainerList,
 	InputContainer,
-	PaginationBoxArrow,
     TextGenre,
-	ContainerPagination,
     ContainerGenresMovie,
     BackgroundGenre
 } from './styles';
@@ -45,7 +50,7 @@ function CategoryMovies({
     const [genresAvailable, setGenresAvailable] = useState<GenresAvailableProps[]>([]);
 
     async function consultGenresAvailable() {
-
+    
         setLoading(true);
 
         try {
@@ -53,8 +58,9 @@ function CategoryMovies({
             const { data } = await axios.get<{genres: GenresMovies[]}>('/genre/movie/list');
             setGenresAvailable(data.genres);
 
-        } catch(e) {
+        } catch(e: any) {
             console.error(e);
+            Alert.alert("Error!", e.message ? e.message : "There was a error when performing the function of search genres of movies. Please, verify your connection with network.")
         } finally {
             setLoading(false);
         }
@@ -76,8 +82,9 @@ function CategoryMovies({
             });
             setMovies(data);
             
-        } catch(e) {
+        } catch(e: any) {
             console.error(e);
+            Alert.alert("Error!", e.message ? e.message : "There was a error when performing the function of search movies by genre. Please, verify your connection with network.")
         } finally {
             setLoadingMovies(false);
         }
@@ -108,9 +115,11 @@ function CategoryMovies({
 		</View> : <></>
 	}
 
-    useEffect(() => {
-        consultGenresAvailable();
-    }, [route]);
+    useFocusEffect(
+        useCallback(() => {            
+            consultGenresAvailable();
+        }, [route])
+    );
 
     useEffect(() => {
         if(selectedGenres.length > 0) {

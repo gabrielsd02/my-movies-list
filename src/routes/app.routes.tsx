@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Home from '../pages/Home';
 import Search from '../pages/Search';
+import FavoriteMovies from '../pages/FavoriteMovies';
 import CategoryMovies from '../pages/CategoryMovies';
 import MovieDetails from '../pages/MovieDetails';
 import Header from '../components/Header';
@@ -58,6 +59,7 @@ function AppRoutes() {
 
     async function logOut() {
         await AsyncStorage.removeItem("@my-movies-list:user");
+        await AsyncStorage.removeItem("@my-movies-list:favorites-movies");
         dispatch(setSignOut());
     }
     
@@ -151,6 +153,22 @@ function AppRoutes() {
                         color={color}
                         size={size}
                         name={'bars'}
+                        style={{
+                            marginTop: 2
+                        }}
+                    />
+                }}                    
+            />
+            <Drawer.Screen 
+                name={"Favorites"}
+                component={FavoriteMovies}                    
+                options={{
+                    header: (props) => <Header {...props} />,
+                    drawerLabel: 'Favorites',                                                     
+                    drawerIcon: ({ size, color }) => <FontAwesome 
+                        color={color}
+                        size={size}
+                        name={'star'}
                         style={{
                             marginTop: 2
                         }}

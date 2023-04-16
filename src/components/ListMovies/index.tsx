@@ -12,7 +12,7 @@ interface ListMoviesProps {
     page?: number;
     numberOfColumns?: number;
     horizontal?: boolean;
-    lastRoute?: "Home" | "Search" | "CategoryMovies"; 
+    lastRoute?: "Home" | "Search" | "CategoryMovies" | "Favorites"; 
     navigation?: DrawerNavigationProp<RootDrawerParamList>;
     styleItem?: object;
     setPage?: (value: number) => void;
@@ -37,7 +37,7 @@ export default function ListMovies({
     return <FlashList 
         data={data.results}
         keyExtractor={(movie) => movie.id.toString()}
-        estimatedItemSize={data?.results?.length || undefined}
+        estimatedItemSize={data?.results?.length || 20}
         contentContainerStyle={{ paddingVertical: 10, paddingHorizontal: 5 }}
         refreshing={loading}                        
         horizontal={horizontal}

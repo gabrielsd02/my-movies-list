@@ -1,7 +1,10 @@
-import { configureStore, createAction, createSlice } from '@reduxjs/toolkit';
+import { 
+    configureStore, 
+    createAction, 
+    createSlice 
+} from '@reduxjs/toolkit';
 
 import {
-    Action,
     UserState
 } from './interfaceStore';
 
@@ -11,25 +14,6 @@ const initialState: UserState = {
 };
 
 export const logout = createAction('LOGOUT');
-
-function authReducer(state = initialState, action: Action) {
-  	switch (action.type) {
-		case 'AUTHENTICATE':
-			return {
-				...state,
-				authenticated: true,
-				user: action.payload!,
-			};
-		case 'LOGOUT':
-			return {
-				...state,
-				authenticated: false,
-				user: '',
-			};
-		default:
-		return state;
-  	}
-}
 
 const authSlice = createSlice({
     name: 'userAuth',

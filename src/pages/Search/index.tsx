@@ -3,7 +3,8 @@ import {
 	View, 
 	TextInput, 
 	TouchableOpacity,
-	ScrollView
+	ScrollView,
+	Alert
 } from 'react-native'
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RouteProp } from '@react-navigation/native';
@@ -56,7 +57,8 @@ function Search({ navigation }: SearchProps) {
 			setMoviesResults(data);
 
         } catch(e: any) {
-            console.error(e?.response ? e.response: e);
+            console.error(e.response ? e.response: e);
+			Alert.alert("Error", e.message ? e.message : "There was a error when performing the search. Please verify your connection with the network.");
         } finally {
             setLoading(false);            
         }

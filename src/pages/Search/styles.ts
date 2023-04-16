@@ -44,6 +44,7 @@ export const PageText = styled.Text`
 
 export const ContainerList = styled.View`
     width: 95%;		
+    max-width: 500px;
     flex-grow: 1;			
     margin: 10px 0px;
     border-radius: 5px;

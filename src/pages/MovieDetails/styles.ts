@@ -16,7 +16,8 @@ export const ContainerMovie = styled.View`
 `;
 
 export const BoxImageMovie = styled.View`
-    height: 250px;
+    height: 40%;
+    max-height: 500px;
     width: 100%;
     align-items: center;
     justify-content: center;

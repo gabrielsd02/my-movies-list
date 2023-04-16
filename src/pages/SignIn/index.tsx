@@ -3,7 +3,8 @@ import {
     Platform,
     TextInput,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Alert
 } from 'react-native'
 import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -52,8 +53,9 @@ function SignIn() {
 
             await AsyncStorage.setItem("@my-movies-list:user", JSON.stringify(dataCache));
 
-        } catch(e) {
+        } catch(e: any) {
             console.error(e);
+            Alert.alert("Error", e.message ? e.message : "There was a error when performing the login. Please verify your connection with the network.");
         } finally {
             setLoading(false);
         }         
@@ -78,7 +80,7 @@ function SignIn() {
             });
         }
 
-        if(user !== 'Gabriel' && password !== '123') {
+        if(user !== 'Gabriel' || password !== '123') {
             return Toast.show({
                 type: 'error',
                 autoHide: true,
