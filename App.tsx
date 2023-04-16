@@ -11,6 +11,7 @@ export default function App() {
       <Provider store={store}>
         <StatusBar 
             barStyle={'default'}
+            backgroundColor={"#0b1b49eb"}
             translucent
         />
         <Toast />

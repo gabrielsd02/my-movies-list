@@ -60,6 +60,7 @@ export const PressableAroundIcon = styled.TouchableOpacity.attrs({
 
 export const ContainerTitle = styled.View`
     padding: 5px;
+    width: 100%;
     min-height: 70px;
     align-items: center;
     justify-content: center;
@@ -165,6 +166,7 @@ export const ContainerCompanies = styled.View`
     flex-direction: row;
     overflow: hidden;  
     flex-grow: 1;
+    width: 100%;
     flex-wrap: wrap;                             
     background-color: rgba(0,0,0,0.2); 
 `;

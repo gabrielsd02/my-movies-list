@@ -37,7 +37,16 @@ function Header(props: DrawerHeaderProps) {
     
     return (
         <Topbar>    
-            <ContainerIcons>
+            <ContainerIcons>                
+                <IconPressableContainer
+                    onPress={() => props.navigation.toggleDrawer()}
+                >                    
+                    <FontAwesome 
+                        color={'white'}
+                        size={32}
+                        name='bars'
+                    />
+                </IconPressableContainer>
                 {(!isHome) && (
                     <IconPressableContainer
                         onPress={handleBack}
@@ -49,15 +58,6 @@ function Header(props: DrawerHeaderProps) {
                         />
                     </IconPressableContainer>
                 )}
-                <IconPressableContainer
-                    onPress={() => props.navigation.toggleDrawer()}
-                >                    
-                    <FontAwesome 
-                        color={'white'}
-                        size={32}
-                        name='bars'
-                    />
-                </IconPressableContainer>
             </ContainerIcons>        
             <ContainerNameApp>
                 <FontAwesome 
