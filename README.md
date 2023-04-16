@@ -11,8 +11,8 @@ Projeto de visualização de informações de filmes em React Native + Expo, ond
 
 ## Login
 - Para o Login, fiz somente verificações para entrar no aplicativo
--- Usuário: Gabriel
--- Senha: 123
+- Usuário: Gabriel
+- Senha: 123
 
 ## Observações
 - Não possuo um dispositivo IOS para testar este projeto, então não consigo ver como está o estado do aplicativo nessa plataforma.
