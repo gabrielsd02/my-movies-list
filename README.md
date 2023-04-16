@@ -1,6 +1,9 @@
 # My Movies List
 Projeto de visualização de informações de filmes em React Native + Expo, onde essas informações vem por meio da API https://developers.themoviedb.org/ 
 
+## Demo
+- Assista o vídeo: [Vídeo Demo](https://drive.google.com/file/d/11ZeUwWWeta32M0as7an5oHXzLhOBlss0/view?usp=sharing)
+
 ## Instalação
 - Baixe o projeto em sua máquina;
 - Execute o comando `$ yarn install` caso tenha esse gerenciador de pacotes, ou poderá ser também com `$ npm install`
